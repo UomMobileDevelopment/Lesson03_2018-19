@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String STATE_PENDING_OPERATION = "PendingOperation";
+    private static final String STATE_OPERAND1 = "Operand1";
+
     private EditText result;
     private EditText newNumber;
     private TextView displayOperation;
@@ -58,8 +61,12 @@ public class MainActivity extends AppCompatActivity {
                 Button b = (Button)view;
                 String operation = b.getText().toString();
                 String value = newNumber.getText().toString();
-                if(value.length() > 0){
-                    performOperation(value, operation);
+                try{
+                    Double doubleValue = Double.valueOf(value);
+                    performOperation(doubleValue, operation);
+                }
+                catch (NumberFormatException nfe){
+                    newNumber.setText("");
                 }
                 pendingOperation = operation;
                 displayOperation.setText(pendingOperation);
@@ -71,11 +78,11 @@ public class MainActivity extends AppCompatActivity {
         buttonPlus.setOnClickListener(operationListener);
     }
 
-    private void performOperation(String value, String operation) {
+    private void performOperation(Double value, String operation) {
         if(operand1 == null){
-            operand1 = Double.valueOf(value);
+            operand1 = value;
         }else{
-            operand2 = Double.valueOf(value);
+            operand2 = value;
 
             if(pendingOperation.equals("=")){
                 pendingOperation = operation;
@@ -97,4 +104,20 @@ public class MainActivity extends AppCompatActivity {
         newNumber.setText("");
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(STATE_PENDING_OPERATION, pendingOperation);
+        if(operand1 != null) {
+            outState.putDouble(STATE_OPERAND1, operand1);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION);
+        operand1 = savedInstanceState.getDouble(STATE_OPERAND1);
+        displayOperation.setText(pendingOperation);
+    }
 }
