@@ -11,6 +11,8 @@
 
 4. **Use saved Instance State knowledge** The calculator has been probably finished! But there is a bug. To see it make a calculation, change orientation and continue calculating! oops! Something needs to be fixed there!
 
+5. **Polishing landscape layout**. We are going to learn how to center the buttons group on landscape screen by using Guidelines
+
 
 
 ![calc1](https://github.com/UomMobileDevelopment/Lesson03_2018-19/blob/master/img/calc1.PNG)
